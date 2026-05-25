@@ -71,7 +71,7 @@ public class WebPrefs_DemoScript : MonoBehaviour
         RefreshDisplay();
     }
     
-    public void Reload() { WebPrefs.Reload(); } // Just reloads the backup data from IndexedDB, usually not important.
+    public void Reload() { WebPrefs.Reload(); RefreshDisplay(); } // WebPrefs.Reload() just reloads the backup data from IndexedDB, usually not important.
     
     // Saving
     
@@ -82,9 +82,11 @@ public class WebPrefs_DemoScript : MonoBehaviour
         {
             // Simply saving the value with the key, nothing special is happening here or changing. You can do this the same with all the types below.
             WebPrefs.Save(_activeSaveKey, (int)numberValue);
+            RefreshDisplay();
             return;
         }
         WebPrefs.Save(_activeSaveKey, numberValue);
+        RefreshDisplay();
     }
 
     public void SaveString() { WebPrefs.Save(_activeSaveKey, stringValue); RefreshDisplay(); }

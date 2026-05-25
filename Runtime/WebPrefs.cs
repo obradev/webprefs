@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System;
 using UnityEngine;
 
 namespace ObraDev.WebPrefs
@@ -24,10 +25,24 @@ namespace ObraDev.WebPrefs
             [DllImport("__Internal")]
             private static extern void ClearAll(string masterKey);
         #endif
-
-        private static readonly string MasterKey = Application.identifier;
+        
         private static string _idbString;
         private static bool _idbLoaded = false;
+        
+        private static string _masterKey;
+        private static string MasterKey
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_masterKey))
+                {
+                    _masterKey = Application.identifier;
+                    if (string.IsNullOrEmpty(_masterKey))
+                        _masterKey = Application.productName.Replace(" ", "").ToLower();
+                }
+                return _masterKey;
+            }
+        }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Initialize()
@@ -83,6 +98,7 @@ namespace ObraDev.WebPrefs
             #else
                 PlayerPrefs.Save();
             #endif
+            Debug.Log("Reloaded database: " + MasterKey);
         }
         
         public static void Save(string key, object value)
@@ -141,8 +157,11 @@ namespace ObraDev.WebPrefs
         {
             #if UNITY_WEBGL && !UNITY_EDITOR
                 ClearAll(MasterKey);
+                _idbString = "";
+                _idbLoaded = false;
+            #else
+                PlayerPrefs.DeleteAll();
             #endif
-            PlayerPrefs.DeleteAll();
         }
 
         public static T Load<T>(string key, T defaultValue = default(T))

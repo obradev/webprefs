@@ -1,17 +1,17 @@
 {
   "name": "com.obradev.webprefs",
   "displayName": "WebPrefs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "unity": "6000.0",
-  "description": "Reliable WebGL storage that keeps up with your updates.",
+  "description": "Reliable and Powerful WebGL storage that keeps up with your updates.",
   "author": {
     "name": "obradev",
-    "url": "http://obradev.itch.io",
+    "url": "http://obradev.com",
     "email": "msg.obradev@pm.me"
   },
-  "changelogUrl": "https://example.com/changelog.html",
-  "documentationUrl": "https://example.com/",
-  "licensesUrl": "https://example.com/licensing.html",
+  "changelogUrl": "https://obradev.com/webprefs/changelog",
+  "documentationUrl": "https://obradev.com/webprefs",
+  "licensesUrl": "https://obradev.com/webprefs/license",
   "samples": [
     {
         "displayName": "WebPrefs Demo",
