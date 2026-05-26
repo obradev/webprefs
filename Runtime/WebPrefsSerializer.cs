@@ -112,7 +112,7 @@ namespace ObraDev.WebPrefs
             object result = typeChar switch
             {
                 '0' => int.Parse(rawValue),
-                '1' => float.Parse(rawValue),
+                '1' => float.Parse(rawValue, System.Globalization.CultureInfo.InvariantCulture),
                 '2' => rawValue == "1",
                 '3' => rawValue,
                 '4' => new Vector2(values[0], values[1]),

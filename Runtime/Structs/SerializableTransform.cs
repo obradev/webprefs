@@ -2,6 +2,19 @@ using UnityEngine;
 
 namespace ObraDev.WebPrefs
 {
+    /// <summary>
+    /// A serializable snapshot of a Transform's position, rotation (euler angles) and scale.
+    /// Can be saved and loaded with WebPrefs.Save() and WebPrefs.LoadSTransform().
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// // Save
+    /// WebPrefs.Save("player", new SerializableTransform(transform));
+    /// 
+    /// // Load and apply
+    /// WebPrefs.LoadSTransform("player").ApplyTo(transform);
+    /// </code>
+    /// </example>
     public struct SerializableTransform
     {
         public Vector3 position;
@@ -50,6 +63,7 @@ namespace ObraDev.WebPrefs
             this.scale = Vector3.one;
         }
         
+        /// <summary>Applies the saved position, rotation and scale back to a Transform.</summary>
         public void ApplyTo(Transform transform)
         {
             transform.position = position;
@@ -57,6 +71,7 @@ namespace ObraDev.WebPrefs
             transform.localScale = scale;
         }
         
+        /// <summary>Outputs the saved position, rotation and scale as a string.</summary>
         public override string ToString()
         {
             return "P: " + position + " R: " + rotation + " S: " + scale;
