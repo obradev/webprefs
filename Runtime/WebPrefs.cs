@@ -152,6 +152,7 @@ namespace ObraDev.WebPrefs
             #else
                 PlayerPrefs.SetString(MasterKey, master);
                 PlayerPrefs.Save();
+                OnKeySaved?.Invoke(key);
             #endif
         }
         
