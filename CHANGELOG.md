@@ -13,3 +13,14 @@
 - Added simple Load() method to fallback to string.
 - Added automatic backup reloading every 30 seconds.
 - Very minor other tweaks.
+
+# v0.2.0
+- Added a full Events system with 6 subscribable Actions:
+  - OnKeySaved(string key)
+  - OnKeyDeleted(string key)
+  - OnDataCleared
+  - OnDataRestored
+  - OnSaveFailed
+  - OnStorageFull
+- Added GetKeyType(string key) - Returns the Type a key was saved as, or null if not found.
+- Added GetAllKeys() - Returns a string array of all currently saved keys.

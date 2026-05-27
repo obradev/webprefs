@@ -44,6 +44,13 @@ namespace ObraDev.WebPrefs
             }
         }
 
+        public static event Action<string> OnKeySaved;
+        public static event Action<string> OnKeyDeleted;
+        public static event Action OnDataCleared;
+        public static event Action OnDataRestored;
+        public static event Action OnSaveFailed;
+        public static event Action OnStorageFull;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Initialize()
         {
@@ -61,12 +68,12 @@ namespace ObraDev.WebPrefs
                     string master = FetchMasterString();
                     if (string.IsNullOrEmpty(master) || master == "|")
                     {
-                        // localStorage was empty, restore from IDB
                         int writeResult = SaveToLocalStorage(MasterKey, result);
                         if (writeResult == 0)
                             Debug.LogError("WebPrefs failed to restore localStorage data from IDB backup.");
                         else
                             Debug.LogWarning("WebPrefs restored missing localStorage data from IDB backup.");
+                            OnDataRestored?.Invoke();
                     }
                 }
             #endif
@@ -131,12 +138,15 @@ namespace ObraDev.WebPrefs
                 {
                     Debug.LogWarning("WebPrefs: Too much data in localStorage, saving to IndexedDB only.");
                     SaveIDBKey(MasterKey, "main", master);
+                    OnStorageFull?.Invoke();
                 }
                 else
                 {
                     int result = SaveToLocalStorage(MasterKey, master);
                     if (result == 0)
                         Debug.LogError("WebPrefs: Failed to write to localStorage.");
+                        OnSaveFailed?.Invoke();
+                    else { OnKeySaved?.Invoke(key); }
                     SaveIDBKey(MasterKey, "main", master);
                 }
             #else
@@ -156,6 +166,25 @@ namespace ObraDev.WebPrefs
         }
 
         /// <summary>
+        /// Returns the Type that a key was saved as, or null if the key doesn't exist.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>The Type the value was saved as, or null if not found.</returns>
+        public static Type GetKeyType(string key)
+        {
+            return WebPrefsSerializer.GetKeyType(FetchMasterString(), key);
+        }
+
+        /// <summary>
+        /// Returns an array of all keys currently saved.
+        /// </summary>
+        /// <returns>String array of all saved keys.</returns>
+        public static string[] GetAllKeys()
+        {
+            return WebPrefsSerializer.GetAllKeys(FetchMasterString());
+        }
+
+        /// <summary>
         /// Removes one key from the save data, and its value.
         /// </summary>
         /// <param name="key">The key to remove from the save data.</param>
@@ -172,6 +201,8 @@ namespace ObraDev.WebPrefs
                 PlayerPrefs.SetString(MasterKey, master);
                 PlayerPrefs.Save();
             #endif
+
+            OnKeyDeleted?.Invoke(key);
         }
 
         /// <summary>
@@ -186,6 +217,7 @@ namespace ObraDev.WebPrefs
             #else
                 PlayerPrefs.DeleteAll();
             #endif
+            OnDataCleared?.Invoke();
         }
 
         /// <summary>

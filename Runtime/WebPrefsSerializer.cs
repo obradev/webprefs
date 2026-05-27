@@ -161,7 +161,63 @@ namespace ObraDev.WebPrefs
 
             return masterString.Substring(0, entryStart) + masterString.Substring(valueEnd);
         }
-        
+
+        internal static Type GetKeyType(string masterString, string key)
+        {
+            key = NormalizeKey(key);
+            string search = "|" + key + "|";
+            int keyIndex = masterString.IndexOf(search);
+            
+            if (keyIndex == -1) return null;
+            
+            char typeChar = masterString[keyIndex + search.Length];
+            
+            return typeChar switch
+            {
+                '0' => typeof(int),
+                '1' => typeof(float),
+                '2' => typeof(bool),
+                '3' => typeof(string),
+                '4' => typeof(Vector2),
+                '5' => typeof(Vector3),
+                '6' => typeof(Vector4),
+                '7' => typeof(Quaternion),
+                '8' => typeof(Color),
+                '9' => typeof(Color32),
+                'T' => typeof(SerializableTransform),
+                _   => null
+            };
+        }
+
+        internal static string[] GetAllKeys(string masterString)
+        {
+            if (string.IsNullOrEmpty(masterString))
+                return new string[0];
+
+            List<string> keys = new List<string>();
+            int i = 0;
+
+            while (i < masterString.Length)
+            {
+                int keyStart = masterString.IndexOf('|', i) + 1;
+                if (keyStart <= 0 || keyStart >= masterString.Length) break;
+
+                int keyEnd = masterString.IndexOf('|', keyStart);
+                if (keyEnd == -1) break;
+
+                string key = masterString.Substring(keyStart, keyEnd - keyStart);
+                keys.Add(key);
+
+                int valueStart = keyEnd + 2;
+                int valueEnd = masterString.IndexOf('|', valueStart);
+                if (valueEnd == -1) break;
+
+                i = valueEnd;
+            }
+
+            return keys.ToArray();
+        }
+                
         private static float[] ParseFloats(string raw)
         {
             string[] p = raw.Split(',');
