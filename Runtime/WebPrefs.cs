@@ -80,7 +80,7 @@ namespace ObraDev.WebPrefs
                             master = Marshal.PtrToStringUTF8(ptr);
                             Marshal.FreeHGlobal(ptr);
             #else
-                        master = PlayerPrefs.GetString(MasterKey, "|");
+                        master = PlayerPrefs.GetString(MasterKey, "");
             #endif
             
             return master;
@@ -228,6 +228,12 @@ namespace ObraDev.WebPrefs
         
         
         // LOAD ALTERNATIVE FUNCTIONS
+        
+        /// <summary>Loads a string value. Shorthand for Load&lt;string&gt;.</summary>
+        public static string Load(string key, string defaultValue = null)
+        {
+            return Load<string>(key, defaultValue);
+        }
         
         /// <summary>Loads a string value. Shorthand for Load&lt;string&gt;.</summary>
         public static string LoadString(string key, string defaultValue = null)

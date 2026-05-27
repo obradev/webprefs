@@ -4,6 +4,9 @@ namespace ObraDev.WebPrefs
 {
     internal class WebPrefsListener : MonoBehaviour
     {
+        private static float _reloadTimer = 0f;
+        private const float ReloadInterval = 30f;
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Initialize()
         {
@@ -16,6 +19,16 @@ namespace ObraDev.WebPrefs
         internal void OnIDBLoad(string values)
         {
             WebPrefs.HandleIDBResult(values);
+        }
+
+        private void Update()
+        {
+            _reloadTimer += Time.deltaTime;
+            if (_reloadTimer >= ReloadInterval)
+            {
+                _reloadTimer = 0f;
+                WebPrefs.Reload();
+            }
         }
     }
 }
