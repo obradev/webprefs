@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V0K4CJE)
+
 # WebPrefs
 
 WebPrefs is a package which serves as a replacement to Unity's PlayerPrefs saving system made to integrate much better into WebGL games. WebPrefs makes your save data harder to lose after publishing new game builds, and gives you much more power and flexibility with the data you are saving.
